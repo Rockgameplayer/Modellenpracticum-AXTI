@@ -33,6 +33,7 @@ def plot_field(field, title='', **kwargs):
   # ax.invert_yaxis()  # does not work?
   plt.axis('square')
   plt.show()
+  plt.savefig("output.png")
 
 def timestepFD(flow_field):
   '''

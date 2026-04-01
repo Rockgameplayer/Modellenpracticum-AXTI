@@ -10,4 +10,3 @@ plt.xlabel("x")
 plt.ylabel("sin(x)")
 plt.grid(True)
 plt.savefig("output.png")
-#what is up

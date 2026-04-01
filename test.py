@@ -9,6 +9,5 @@ plt.title("Test Plot")
 plt.xlabel("x")
 plt.ylabel("sin(x)")
 plt.grid(True)
-plt.show()
 plt.savefig("output.png")
-#testpush
+#what is up

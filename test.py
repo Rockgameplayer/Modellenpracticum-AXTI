@@ -41,27 +41,6 @@ def plot_field(field, title='', **kwargs):
 
     plt.savefig('testplot.png')
 
-def plot_field(field, title='', **kwargs):
-    fig = plt.figure(figsize=(14, 12))
-    ax = fig.add_subplot(projection='3d') # Correctly assign the 3D axes
-
-    id = generateIdentity()
-    # Corrected: use id[0][0] for X-coords, id[0][1] for Y-coords, id[0][2] for Z-coords
-    # and field[0][0] for X-component, field[0][1] for Y-component, field[0][2] for Z-component
-    ax.quiver(id[0][0], id[0][1], id[0][2], field[0][0], field[0][1], field[0][2], **kwargs)
-    ax.set_title(title)
-
-    # Add axis labels
-    ax.set_xlabel('X-axis')
-    ax.set_ylabel('Y-axis')
-    ax.set_zlabel('Z-axis')
-
-    # If depth is 1, manually adjust z-limits to prevent squishing
-    ax.set_zlim(-1, 1)
-    ax.set_box_aspect([1,1,1]) # Make axes have equal ratio
-
-    plt.show()
-
 def max_norm(field, exclude : int = 0):
     '''
     Calculate the maximum norm of a tensor of dimension (N, C, H, W).

@@ -4,10 +4,10 @@ import math
 import matplotlib.pyplot as plt
 import time
 print('cuda available:', torch.cuda.is_available())
-torch.set_default_device(torch.device('cuda' if torch.cuda.is_available() else 'cpu'))
+#torch.set_default_device(torch.device('cuda' if torch.cuda.is_available() else 'cpu'))
 
 # W = H = D = 768
-WIDTH, HEIGHT, DEPTH = 20, 20, 3
+WIDTH, HEIGHT, DEPTH = 20, 20, 20
 # DIM = (1, 2, HEIGHT, WIDTH)  # format (N=batch_size, C=channel, H, W)
 DIM = (1, 2, DEPTH, HEIGHT, WIDTH) # format (N=batch_size, C=channel, D, H, W)
 
@@ -170,7 +170,7 @@ def normalVectorFieldExponential(flow_field, N=None):
     dt = 2**(-N)
 
     # normalize u
-    d, h, w = u.size()[2:]
+    d, h, w = flow_field.size()[2:]
     flow_field_copy = torch.clone(flow_field)
     flow_field_copy[0, 0, ...] /= w/2
     flow_field_copy[0, 1, ...] /= h/2
@@ -273,10 +273,10 @@ def main():
 
     fns = (fastVectorFieldExponential, fastVectorFieldExponential_new, normalVectorFieldExponential, normalVectorFieldExponential_new)
     for fn in fns:
-        error, _ = compareForwardBackward(u, fn)
+        error, elapsed = compareForwardBackward(u, fn)
         # plot_error(u, fn)
         pass
-        print(error)
+        print(f'{fn.__name__}: {error=}, {elapsed=}ms')
 
 if __name__ == '__main__':
     main()

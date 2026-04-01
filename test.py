@@ -4,10 +4,9 @@ import math
 import matplotlib.pyplot as plt
 import time
 
-# W = H = D = 768
-WIDTH, HEIGHT, DEPTH = 20, 20, 20
-# DIM = (1, 2, HEIGHT, WIDTH)  # format (N=batch_size, C=channel, H, W)
-DIM = (1, 2, DEPTH, HEIGHT, WIDTH) # format (N=batch_size, C=channel, D, H, W)
+# W = H = L = 768
+WIDTH, HEIGHT = 20, 20
+DIM = (1, 2, HEIGHT, WIDTH)  # format (N=batch_size, C=channel, H, W)
 
 def generateIdentity():
   '''

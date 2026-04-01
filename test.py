@@ -23,6 +23,17 @@ def max_norm(field, exclude : int = 0):
   '''
   return torch.max(torch.linalg.vector_norm(field, dim=(1,))).item()  # calculate norm over dimension 1 = C
 
+def plot_field(field, title='', **kwargs):
+  fig, ax = plt.subplots()
+
+  id = generateIdentity()
+  plt.quiver(id[0][0], id[0][1], field[0][0], field[0][1], **kwargs)
+  plt.title(title)
+
+  # ax.invert_yaxis()  # does not work?
+  plt.axis('square')
+  plt.show()
+
 def timestepFD(flow_field):
   '''
   Calculate N so that max_norm(flow_field / 2**N) <= 0.5
@@ -65,3 +76,10 @@ def fastVectorFieldExponential(flow_field, N=None):
   # v[0][1] *= h/2
   return v
 
+angle = math.pi/4
+affine_matrix = torch.tensor([[[math.cos(angle), -math.sin(angle), 0],[math.sin(angle), math.cos(angle), 0]]], dtype=torch.float).expand((1, 2, 3))
+affine_rotation = F.affine_grid(affine_matrix, DIM, align_corners=True).permute(0,3,1,2)
+u = (affine_rotation - generateIdentity()) * WIDTH/2
+
+
+plot_field(u, title='Flow field')

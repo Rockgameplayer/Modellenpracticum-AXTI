@@ -39,7 +39,7 @@ def plot_field(field, title='', **kwargs):
     ax.set_zlim(-1, 1)
     ax.set_box_aspect([1,1,1]) # Make axes have equal ratio
 
-    plt.savefig('testplot.png')
+    plt.savefig(f'img_{title}.png')
 
 def max_norm(field, exclude : int = 0):
     '''
@@ -232,47 +232,51 @@ def plot_error(flow_field, exp_function):
     fig.tight_layout()  # otherwise the right y-label is slightly clipped
     plt.show()
 
-# u = torch.ones(dim, dtype = torch.float)
+def main():
+    # u = torch.ones(dim, dtype = torch.float)
 
-## 1/2 rescaling
-# u = -generateIdentity() / 2 * WIDTH/2
+    ## 1/2 rescaling
+    # u = -generateIdentity() / 2 * WIDTH/2
 
-### rotate by angle
-x_angle = math.pi/4
-y_angle = 0
-z_angle = math.pi/4
-z_rot = torch.tensor([[math.cos(z_angle), -math.sin(z_angle), 0],[math.sin(z_angle), math.cos(z_angle), 0],[0,0,1]])
-y_rot = torch.tensor([[math.cos(y_angle), 0, math.sin(y_angle)],[0,1,0],[-math.sin(y_angle), 0, math.cos(y_angle)]])
-x_rot = torch.tensor([[1,0,0],[0,math.cos(x_angle), -math.sin(x_angle)],[0,math.sin(x_angle),math.cos(x_angle)]])
-rot_matrix = torch.matmul(z_rot,torch.matmul(y_rot,x_rot))
+    ### rotate by angle
+    x_angle = math.pi/4
+    y_angle = 0
+    z_angle = math.pi/4
+    z_rot = torch.tensor([[math.cos(z_angle), -math.sin(z_angle), 0],[math.sin(z_angle), math.cos(z_angle), 0],[0,0,1]])
+    y_rot = torch.tensor([[math.cos(y_angle), 0, math.sin(y_angle)],[0,1,0],[-math.sin(y_angle), 0, math.cos(y_angle)]])
+    x_rot = torch.tensor([[1,0,0],[0,math.cos(x_angle), -math.sin(x_angle)],[0,math.sin(x_angle),math.cos(x_angle)]])
+    rot_matrix = torch.matmul(z_rot,torch.matmul(y_rot,x_rot))
 
-affine_rotation = F.affine_grid(torch.column_stack((rot_matrix, torch.tensor([0, 0, 0]))).expand(1,3,4), DIM, align_corners=True).permute(0,4,1,2,3)
-u = (affine_rotation - generateIdentity()) * WIDTH/2
+    affine_rotation = F.affine_grid(torch.column_stack((rot_matrix, torch.tensor([0, 0, 0]))).expand(1,3,4), DIM, align_corners=True).permute(0,4,1,2,3)
+    u = (affine_rotation - generateIdentity()) * WIDTH/2
 
-# print_tensor(u)
-# plot_field(u, title='Flow field')
+    # print_tensor(u)
+    # plot_field(u, title='Flow field')
 
-# plot_field(fastVectorFieldExponential_new(u), title='fastVectorFieldExponential_new', scale_units='xy', scale=1)
+    # plot_field(fastVectorFieldExponential_new(u), title='fastVectorFieldExponential_new', scale_units='xy', scale=1)
 
-# a = animate_vector_field_exponential2(u)
+    # a = animate_vector_field_exponential2(u)
 
-# from matplotlib import rc
-# # equivalent to rcParams['animation.html'] = 'html5'
-# rc('animation', html='html5')
+    # from matplotlib import rc
+    # # equivalent to rcParams['animation.html'] = 'html5'
+    # rc('animation', html='html5')
 
-# from IPython.display import HTML
-# HTML(a.to_html5_video())
-# a
+    # from IPython.display import HTML
+    # HTML(a.to_html5_video())
+    # a
 
 
-# v = fastVectorFieldExponential_new(u)
-# plot_field(fastVectorFieldExponential_new(u), scale_units='xy', scale=1, title='Displacement field (forward)')
-# plot_field(fastVectorFieldExponential_new(-u), scale_units='xy', scale=1, title='Displacement field (backward)')
-# plot_field(remove_border(u, 0.15))
+    # v = fastVectorFieldExponential_new(u)
+    # plot_field(fastVectorFieldExponential_new(u), scale_units='xy', scale=1, title='Displacement field (forward)')
+    # plot_field(fastVectorFieldExponential_new(-u), scale_units='xy', scale=1, title='Displacement field (backward)')
+    # plot_field(remove_border(u, 0.15))
 
-fns = (fastVectorFieldExponential, fastVectorFieldExponential_new, normalVectorFieldExponential, normalVectorFieldExponential_new)
-for fn in fns:
-    error, _ = compareForwardBackward(u, fn)
-    # plot_error(u, fn)
-    pass
-    print(error)
+    fns = (fastVectorFieldExponential, fastVectorFieldExponential_new, normalVectorFieldExponential, normalVectorFieldExponential_new)
+    for fn in fns:
+        error, _ = compareForwardBackward(u, fn)
+        # plot_error(u, fn)
+        pass
+        print(error)
+
+if __name__ == '__main__':
+    main()
